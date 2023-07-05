@@ -1,5 +1,7 @@
 import 'bootstrap';
 import 'admin-lte';
+import axios from 'axios';
+import jQuery from 'jquery';
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -7,8 +9,11 @@ import 'admin-lte';
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-import axios from 'axios';
+
 window.axios = axios;
+
+window.$ = window.jQuery = jQuery;
+
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
