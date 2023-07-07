@@ -4,15 +4,10 @@ import 'bootstrap/dist/js/bootstrap.bundle.js';
 
 // Import vue
 import { createApp } from 'vue';
-// Create the root app instance using vue
 const app = createApp({});
-
-// Import vue-router
-import { createRouter, createWebHistory } from 'vue-router';
 
 // Import v-form
 import Form from 'vform';
-// Create the form instance
 const form = new Form();
 
 // Import VueProgressBar
@@ -35,11 +30,21 @@ const options = {
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
+//Import Gate (Front End)
+import Gate from "./Gate";
+app.config.globalProperties.$gate = new Gate(window.user);
+
+// Import vue-router
+import { createRouter, createWebHistory } from 'vue-router';
+
 // Define route components
 import ExampleComponent from './components/ExampleComponent.vue';
 app.component('example-component', ExampleComponent);
 import Users from './components/Users.vue';
 app.component('Users', Users);
+import Error from './components/Error.vue';
+app.component('Error', Error);
+
 
 // Define routes
 const routes = [
@@ -50,6 +55,8 @@ const routes = [
   { path: '/corrections', component: ExampleComponent },
   { path: '/planning', component: ExampleComponent },
   { path: '/statistiques', component: ExampleComponent },
+  { path: '/home', component: ExampleComponent},
+  { path: '/:pathMatch(.*)*', component: Error},
 ];
 
 // Create the router instance

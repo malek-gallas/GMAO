@@ -62,20 +62,23 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-                        
+                    @if(Gate::allows('isAdmin') || Gate::allows('isChef'))       
+
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-sliders-h pink"></i>
                                 <p>Management<i class="right fa fa-angle-left"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
-                                
+
+                            @can('isAdmin') 
                                 <li class="nav-item">
                                     <router-link to="/Users" class="nav-link">
                                         <i class="nav-icon fas fa-user cyan"></i>
                                         <p>Intervenants</p>
                                     </router-link>
                                 </li>
+                            @endcan
                                 
                                 <li class="nav-item">
                                     <router-link to="/fabricants" class="nav-link">
@@ -92,7 +95,7 @@
                             </ul>
                         </li>
                         
-
+                    @endif
 
                         <li class="nav-item">
                             <router-link to="/interventions" class="nav-link">
@@ -163,6 +166,12 @@
             </div>
         </div>
         <!-------------------------------------- ./wrapper -------------------------------------->
+        
+        @auth
+        <script>
+            window.user = @json(auth()->user())
+        </script>
+        @endauth
 
         @vite(['resources/js/app.js'])
 

@@ -15,17 +15,14 @@ use App\Http\Controllers\API\UserController;
 |
 */
 
+/*
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+*/
 
-Route::apiResources([
-    'user' => UserController::class,
-    /*
-    'fabriquant' => FabriquantController::class,
-    'machine' => MachineController::class,
-    'prevent' => PreventController::class,
-    'correct' => CorrectController::class,
-    'event' => EventController::class,
-    */
-]);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResources([
+        'user' => UserController::class,
+    ]);
+});

@@ -8,15 +8,28 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
+use Illuminate\Support\Facades\Gate;
+
+
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum');
+        $this->middleware(function ($request, $next) {
+            if (!Gate::allows('isAdmin')) {
+                abort(403, 'Unauthorized');
+            }
+            return $next($request);
+        });
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return User::latest()->paginate(5);
+        return User::where('type', '!=', 'admin')->latest()->paginate(5);
     }
 
     /**

@@ -1,6 +1,7 @@
 <template>
     <div class="container">
-        <div class="row mt-5">
+
+        <div class="row mt-5" v-if="$gate.isAdmin()">
             <div class="col-md-12">
                 <div class="card">
 
@@ -48,6 +49,10 @@
 
                 </div>
             </div>
+        </div>
+
+        <div class="row mt-5" v-if="!$gate.isAdmin()">
+            <Error></Error>
         </div>
 
             <!-- Modal -->
@@ -120,7 +125,8 @@
                     </form>
                 </div>
             </div>
-        </div>   
+        </div>  
+
     </div>
 </template>
 
@@ -158,7 +164,9 @@ const emitter = mitt()
                 this.form.fill(user);
             },
             loadUsers(){
-                axios.get("api/user").then(({ data }) => (this.users = data));  
+                if(this.$gate.isAdmin()){
+                    axios.get("api/user").then(({ data }) => (this.users = data)); 
+                } 
             },
             createUser(){
                 this.$Progress.start();
