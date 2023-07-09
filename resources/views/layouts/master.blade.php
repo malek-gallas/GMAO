@@ -19,22 +19,24 @@
 
         <!-------------------------------------- Navbar --------------------------------------->
         <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
-        <!-- Expand/Shrink -->
-        <ul class="navbar-nav">
-            <li class="nav-item">
-            <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
-            </li>
-        </ul>
 
-        <!-- Search -->
-        <div class="input-group input-group-sm">
-            <input class="form-control form-control-navbar" type="search" placeholder="Rechercher" aria-label="Search">
-            <div class="input-group-append">
-                <button class="btn btn-navbar" type="submit">
-                <i class="fa fa-search"></i>
-                </button>
+            <!-- Expand/Shrink -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
+                </li>
+                
+            </ul>
+
+            <!-- Search -->
+            <div class="input-group input-group-sm">
+                <input v-model="search" @input="handleSearch" class="form-control" type="text" name="search" id="search" placeholder="Rechercher" aria-label="Search">
+                <div class="input-group-append">
+                    <button class="btn btn-navbar" @click="handleSearch">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
             </div>
-        </div> 
 
         </nav>
         <!-------------------------------------- /.navbar --------------------------------------->

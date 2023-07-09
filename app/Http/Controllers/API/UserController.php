@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Support\Facades\Gate;
 
-
-
 class UserController extends Controller
 {
     public function __construct()
@@ -31,7 +29,6 @@ class UserController extends Controller
     {
         return User::where('type', '!=', 'admin')->latest()->paginate(5);
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -54,15 +51,20 @@ class UserController extends Controller
             'type'=> $request['type'],
       ]);
     }
-
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $query)
     {
-        //
+        return User::where('type', '!=', 'admin')
+        ->where(function ($queryBuilder) use ($query) {
+            $queryBuilder->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($query) . '%'])
+                ->orWhereRaw('LOWER(surname) LIKE ?', ['%' . strtolower($query) . '%'])
+                    ->orWhereRaw('LOWER(email) LIKE ?', ['%' . strtolower($query) . '%']);
+        })
+        ->latest()
+        ->paginate(5);
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -86,7 +88,6 @@ class UserController extends Controller
             ]);
         return ['message' => 'Updated the user info'];
     }
-
     /**
      * Remove the specified resource from storage.
      */

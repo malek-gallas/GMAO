@@ -8,8 +8,8 @@
                     <div class="card-header">
                         <h3 class="card-title">Liste des intervenants</h3>
                         <div class="card-tools">
-                            <button class="btn btn-success" @click="newModal">
-                                Ajouter</button>                   
+                            <button class="btn btn-success" @click="newModal">Ajouter</button>       
+                            <button class="btn btn-info" @click="exportExcel">Export excel</button>    
                         </div>
                     </div>
 
@@ -44,9 +44,9 @@
                     </div>
 
                     <div class="card-footer">
-
+                        <Bootstrap5Pagination :data="users" @pagination-change-page="getResults"/>
                     </div>
-
+                    
                 </div>
             </div>
         </div>
@@ -55,7 +55,7 @@
             <Error></Error>
         </div>
 
-            <!-- Modal -->
+        <!-- Modal -->
         <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -69,21 +69,21 @@
                     <form @submit.prevent="editmode ? updateUser() : createUser()">
                         <div class="modal-body">
                             <div class="form-group">
-                                <input v-model="form.matricule" type="text" name="matricule"
+                                <input v-model="form.matricule" type="text" name="matricule" id="matricule"
                                 placeholder="Matricule"
                                 class="form-control" :class="{ 'is-invalid': form.errors.has('matricule') }">
                                 <div v-if="form.errors.has('matricule')" v-html="form.errors.get('matricule')"></div>
                             </div>
                             
                             <div class="form-group">
-                                <input v-model="form.name" type="text" name="name"
-                                placeholder="Nom"
+                                <input v-model="form.name" type="text" name="name" id="name"
+                                placeholder="Nom" autocomplete="name"
                                 class="form-control" :class="{ 'is-invalid': form.errors.has('name') }">
                                 <div v-if="form.errors.has('name')" v-html="form.errors.get('matricule')"></div>
                             </div>
 
                             <div class="form-group">
-                                <input v-model="form.surname" type="text" name="surname"
+                                <input v-model="form.surname" type="text" name="surname" id="surname"
                                 placeholder="Prénom"
                                 class="form-control" :class="{ 'is-invalid': form.errors.has('surname') }">
                                 <div v-if="form.errors.has('surname')" v-html="form.errors.get('matricule')"></div>
@@ -91,29 +91,32 @@
 
 
                             <div class="form-group">
-                                <input v-model="form.username" type="text" name="username"
-                                placeholder="Login"
+                                <input v-model="form.username" type="text" name="username" id="username"
+                                placeholder="Login" autocomplete="username"
                                 class="form-control" :class="{ 'is-invalid': form.errors.has('username') }">
                                 <div v-if="form.errors.has('username')" v-html="form.errors.get('matricule')"></div>
                             </div>
 
                             <div class="form-group">
-                                <input v-model="form.password" type="password" name="password"
+                                <input v-model="form.password" type="password" name="password" id="password"
                                 placeholder="Mot de passe"
                                 class="form-control" :class="{ 'is-invalid': form.errors.has('password') }">
                                 <div v-if="form.errors.has('passwor')" v-html="form.errors.get('matricule')"></div>
                             </div>
 
+      
+
                             <div class="form-group">
-                                <select v-model="form.type" type="text" name="type" id="type"
+                            <select v-model="form.type" name="type" id="type"
                                     class="form-control" :class="{ 'is-invalid': form.errors.has('type') }">
-                                    <option value="">Choisir la fonction</option>
-                                    <option value="admin">Admin</option>
-                                    <option value="technicien">Technicien</option>
-                                    <option value="chef de service">Chef de service</option>
-                                </select>
-                                <div v-if="form.errors.has('type')" v-html="form.errors.get('type')"></div>
+                                <option value="">Choisir la fonction</option>
+                                <option value="admin">Admin</option>
+                                <option value="technicien">Technicien</option>
+                                <option value="chef de service">Chef de service</option>
+                            </select>
+                            <div v-if="form.errors.has('type')" v-html="form.errors.get('type')"></div>
                             </div>
+
                         </div>
 
                         <div class="modal-footer">
@@ -132,12 +135,10 @@
 
 <script>
 import Form from 'vform'
-// Create custom event bus
-import mitt from 'mitt';
-const emitter = mitt()
     export default {
         data(){
             return{
+                name: 'Liste des utilisateurs',
                 editmode: false,
                 users :{},
                 form: new Form({
@@ -152,26 +153,31 @@ const emitter = mitt()
             }
         },
         methods: {
+            // Create user modal
             newModal(){
                 this.editmode = false;
                 this.form.reset();
                 $('#modal').modal('show');
             },
+            // Updata user modal
             editModal(user){
                 this.editmode = true;
                 this.form.reset();
                 $('#modal').modal('show');
                 this.form.fill(user);
             },
-            loadUsers(){
-                if(this.$gate.isAdmin()){
-                    axios.get("api/user").then(({ data }) => (this.users = data)); 
-                } 
+            // Get paginated results
+            getResults(page = 1) {
+                axios.get('api/user?page='+page)
+                    .then(response => {
+                        this.users = response.data;
+                    });
             },
+            // Create
             createUser(){
                 this.$Progress.start();
-                this.form.post('/api/user').then(()=>{
-                emitter.emit('refresh');
+                this.form.post('api/user').then(()=>{
+                this.$emitter.emit('refresh');
                 $('#modal').modal('hide');
                 const Toast = this.$swal.mixin({
                     toast: true,
@@ -186,7 +192,7 @@ const emitter = mitt()
                 })
                 Toast.fire({
                     icon: 'success',
-                    title: 'Signed in successfully'
+                    title: 'Utilisateur ajouté'
                 })
                     this.$Progress.finish();
                 })
@@ -195,6 +201,13 @@ const emitter = mitt()
                     this.$swal.fire("Echec!", "Il y'a un problème.", "warning");
                 })
             },
+            // Read
+            loadUsers(){
+                if(this.$gate.isAdmin()){
+                    axios.get("api/user").then(({ data }) => (this.users = data)); 
+                } 
+            },
+            // Update
             updateUser(){
                 this.$Progress.start();
                 this.form.put('api/user/'+this.form.id)
@@ -206,40 +219,65 @@ const emitter = mitt()
                         'success'
                         )
                         this.$Progress.finish();
-                        emitter.emit('refresh');
+                        this.$emitter.emit('refresh');
                 })
                 .catch(() => {
                     this.$Progress.fail();
+                    this.$swal.fire("Echec!", "Il y'a un problème.", "warning");
                 });
             },
+            // Delete
             deleteUser(id){
                 this.$swal.fire({
-                    title: 'Voulez vous vraiment supprimer cet intervenant ?',
-                    text: "You won't be able to revert this!",
+                    title: 'Voulez vous vraiment supprimer cet utilisateur ?',
+                    text: "Vous ne pourrez pas revenir en arrière !",
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
                     confirmButtonText: 'Oui, Supprimer!',
                     }).then((result) => {
                          if (result.value) {
                                 this.form.delete('api/user/'+id).then(()=>{
                                         this.$swal.fire(
                                         'Supprimé!',
-                                        'Element supprimé.',
+                                        'Utilisateur supprimé.',
                                         'success'
                                         )
-                                        emitter.emit('refresh');
+                                        this.$emitter.emit('refresh');
                                 }).catch(()=> {
+                                    this.$Progress.fail();
                                     this.$swal.fire("Echec!", "Il y'a un problème.", "warning");
                                 });
                          }
                     })
             },
+            // Export Excel data
+            exportExcel() {
+                var arr = [];
+                arr = Object.values(this.users.data);
+                let data = this.$xlsx.utils.json_to_sheet(arr);
+                const workbook = this.$xlsx.utils.book_new();
+                const filename = this.name;
+                this.$xlsx.utils.book_append_sheet(workbook, data, filename);
+                this.$xlsx.writeFile(workbook, `${filename}.xlsx`);
+            },
         },
         created() {
+            // Reload Users when vue component is created
             this.loadUsers();
-            emitter.on('refresh',()=>{
+            // Reload Users when data has changed
+            this.$emitter.on('refresh',()=>{
                 this.loadUsers();
+            });
+            // Reload Users when user is searching
+            this.$emitter.on('searching', (query) => {
+                axios.get('api/user/' + query)
+                    .then(({ data }) => {
+                        this.users = data;
+                    })
+                    .catch(() => {
+                        console.log("Search is not available");
+                    });
             });
         }
     }

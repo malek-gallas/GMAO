@@ -1,16 +1,29 @@
-// Import bootstrap
+/* ----------------------------------- Import vue & Create app ------------------------------------*/
+import { createApp } from 'vue';
+const app = createApp({
+  data() {
+      return {
+          search: '',
+      };
+  },
+  methods: {
+    handleSearch: _.debounce(function() {
+      emitter.emit('searching', this.search);
+    }, 1000),
+    printme() {
+        window.print();
+    },
+  },
+});
+/* ------------------------------------------ Bootstrap ------------------------------------------*/
 import './bootstrap';
 import 'bootstrap/dist/js/bootstrap.bundle.js';
 
-// Import vue
-import { createApp } from 'vue';
-const app = createApp({});
+/* ----------------------------------------- Pagination ------------------------------------------*/
+import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+app.component('Bootstrap5Pagination', Bootstrap5Pagination)
 
-// Import v-form
-import Form from 'vform';
-const form = new Form();
-
-// Import VueProgressBar
+/* --------------------------------------- Progress Bar ------------------------------------------*/
 import VueProgressBar from "@aacassandra/vue3-progressbar";
 const options = {
   color: "#bffaf3",
@@ -26,25 +39,35 @@ const options = {
   inverse: false,
 };
 
-// Import sweetalert2
+/* ---------------------------------------- Sweet Alert ------------------------------------------*/
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
-//Import Gate (Front End)
+/* ------------------------------------------ Gate.js ------------------------------------------*/
 import Gate from "./Gate";
 app.config.globalProperties.$gate = new Gate(window.user);
+
+/* ---------------------------------------- Sheet.js ------------------------------------------*/
+import XLSX from 'xlsx';
+app.config.globalProperties.$xlsx = XLSX;
+
+/* ------------------------------------ Custom event (mitt) --------------------------------------*/
+import mitt from 'mitt';
+const emitter = mitt()
+app.config.globalProperties.$emitter = emitter;
+
+/* ----------------------------------------- Vue Router ------------------------------------------- */
 
 // Import vue-router
 import { createRouter, createWebHistory } from 'vue-router';
 
-// Define route components
+// Define components
 import ExampleComponent from './components/ExampleComponent.vue';
 app.component('example-component', ExampleComponent);
 import Users from './components/Users.vue';
 app.component('Users', Users);
 import Error from './components/Error.vue';
 app.component('Error', Error);
-
 
 // Define routes
 const routes = [
@@ -65,11 +88,7 @@ const router = createRouter({
   routes,
 });
 
-// Make the app use the instances
-app.use(router);
-app.use(form);
-app.use(VueProgressBar, options);
-app.use(VueSweetalert2);
-
-// Mount the app
+/* -------------------------------------------- Mount ------------------------------------------ */
+app.use(router).use(VueProgressBar, options).use(VueSweetalert2);
 app.mount('#app');
+
