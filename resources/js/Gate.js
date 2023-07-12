@@ -6,14 +6,14 @@ export default class Gate{
 
 
     isAdmin(){
-        return this.user.type === 'admin';
+        return this.user.role === 'Administrateur';
     }
 
-    isChef(){
-        return this.user.type === 'chef de service';
+    isManager(){
+        return this.user.role === 'Chef de service';
     }
 
-    isTechnicien(){
-        return this.user.type === 'technicien';
+    isWorker(){
+        return this.user.role === 'Technicien';
     }
 }

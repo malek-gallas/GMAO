@@ -27,7 +27,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::where('type', '!=', 'admin')->latest()->paginate(5);
+        return User::where('role', '!=', 'Administrateur')->latest()->paginate(5);
     }
     /**
      * Store a newly created resource in storage.
@@ -35,20 +35,20 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'name'             => 'required|string|max:191',
-            'surname'             => 'required|string|max:191',
-            'username'             => 'required|string|max:191|unique:users',
+            'employee_id'             => 'required|string|max:8|unique:users',
+            'first_name'             => 'required|string|max:128',
+            'last_name'             => 'required|string|max:128',
+            'role'             => 'required|string|max:128',
+            'email'             => 'required|string|max:128|unique:users',
             'password'             => 'required|string|min:8',
-            'type'             => 'required|string|max:191',
         ]);
-
         return User::create([
-            'matricule'=> $request['matricule'],
-            'name'=> $request ['name'],
-            'surname'=> $request['surname'],
-            'username'=> $request['username'],
-            'password'=> Hash::make($request['password']),
-            'type'=> $request['type'],
+            'employee_id'=> $request['employee_id'],
+            'first_name'=> $request ['first_name'],
+            'last_name'=> $request['last_name'],
+            'role'=> $request['role'],
+            'email'=> $request['email'],
+            'password'=> Hash::make($request['password']),   
       ]);
     }
     /**
@@ -56,11 +56,14 @@ class UserController extends Controller
      */
     public function show(string $query)
     {
-        return User::where('type', '!=', 'admin')
+        return User::where('role', '!=', 'Administrateur')
         ->where(function ($queryBuilder) use ($query) {
-            $queryBuilder->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($query) . '%'])
-                ->orWhereRaw('LOWER(surname) LIKE ?', ['%' . strtolower($query) . '%'])
-                    ->orWhereRaw('LOWER(email) LIKE ?', ['%' . strtolower($query) . '%']);
+            $queryBuilder->whereRaw('LOWER(employee_id) LIKE ?', ['%' . strtolower($query) . '%'])
+                            ->orWhereRaw('LOWER(first_name) LIKE ?', ['%' . strtolower($query) . '%'])
+                                ->orWhereRaw('LOWER(last_name) LIKE ?', ['%' . strtolower($query) . '%'])
+                                    ->orWhereRaw('LOWER(role) LIKE ?', ['%' . strtolower($query) . '%'])
+                                        ->orWhereRaw('LOWER(email) LIKE ?', ['%' . strtolower($query) . '%']);
+                                        
         })
         ->latest()
         ->paginate(5);
@@ -71,22 +74,30 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         $user = User::findOrFail($id);
-        $this->validate($request,[
-            'name'             => 'required|string|max:191',
-            'surname'             => 'required|string|max:191',
-            'username'             => 'required|string|max:191|unique:users,username,'.$user->id,
-            'password'             => 'required|string|min:8',
-            'type'             => 'required|string|max:191',
+    
+        $this->validate($request, [
+            'employee_id' => 'required|string|max:8|unique:users,employee_id,'.$user->id,
+            'first_name' => 'required|string|max:128',
+            'last_name' => 'required|string|max:128',
+            'role' => 'required|string|max:128',
+            'email' => 'required|string|max:128|unique:users,email,'.$user->id,
+            'password' => 'nullable|string|min:8',
         ]);
-        $user->update([
-            'matricule'=> $request['matricule'],
-            'name'=>$request['name'],
-            'surname'=>$request['surname'],
-            'username'=>$request['username'],
-            'type'=>$request['type'],
-            'password'=>Hash::make($request['password']),
-            ]);
-        return ['message' => 'Updated the user info'];
+        $data = [
+            'employee_id' => $request['employee_id'],
+            'first_name' => $request['first_name'],
+            'last_name' => $request['last_name'],
+            'role' => $request['role'],
+            'email' => $request['email'],
+        ];
+        // Only update the password if it is provided
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request['password']);
+        }
+    
+        $user->update($data);
+    
+        return ['message' => 'User Infos Updated'];
     }
     /**
      * Remove the specified resource from storage.

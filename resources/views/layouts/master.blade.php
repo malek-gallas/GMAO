@@ -8,7 +8,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <title>GMAO</title>
-        <!-- CSRF Token -->
         @vite(['resources/sass/app.scss'])
     </head>
 
@@ -25,7 +24,6 @@
                 <li class="nav-item">
                 <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
                 </li>
-                
             </ul>
 
             <!-- Search -->
@@ -44,9 +42,8 @@
         <!--------------------------------- Main Sidebar Container ------------------------------>
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="index3.html" class="brand-link">
-                <img src="./img/logo.jpg" alt="logo" class="brand-image img-circle elevation-3"
-                    style="opacity: .8">
+            <a href="/home" class="brand-link">
+                <img src="./img/logo.jpg" alt="logo" class="brand-image img-circle elevation-3"style="opacity: .8">
                 <span class="brand-text font-weight-light">GMAO</span>
             </a>
 
@@ -57,39 +54,41 @@
                     <div class="image">
                         <img src="./img/admin.png" class="img-circle elevation-2" alt="User Image">
                     </div>
-                    <div style="color:#DFEAEE" class="info">{{Auth::user()->name}}</div>
+                    <div style="color:#DFEAEE" class="info">{{Auth::user()->first_name}}</div>
+                    <div style="color:#DFEAEE" class="info">{{Auth::user()->last_name}}</div>
+                    <div style="color:#DFEAEE" class="info">{{Auth::user()->role}}</div>
                 </div>
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-                    @if(Gate::allows('isAdmin') || Gate::allows('isChef'))       
+                    @if(Gate::allows('isAdmin') || Gate::allows('isManager'))       
 
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-sliders-h pink"></i>
-                                <p>Management<i class="right fa fa-angle-left"></i></p>
+                                <p>Ressources<i class="right fa fa-angle-left"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
 
                             @can('isAdmin') 
                                 <li class="nav-item">
-                                    <router-link to="/Users" class="nav-link">
+                                    <router-link to="/Utilisateurs" class="nav-link">
                                         <i class="nav-icon fas fa-user cyan"></i>
-                                        <p>Intervenants</p>
+                                        <p>Utilisateurs</p>
                                     </router-link>
                                 </li>
                             @endcan
                                 
                                 <li class="nav-item">
-                                    <router-link to="/fabricants" class="nav-link">
+                                    <router-link to="/Fournisseurs" class="nav-link">
                                         <i class="nav-icon fas fa-industry blue"></i>
-                                        <p>Fabriquants</p>
+                                        <p>Fournisseurs</p>
                                     </router-link>
                                 </li>
                                 <li class="nav-item">
-                                    <router-link to="/machines" class="nav-link">
+                                    <router-link to="/Machines" class="nav-link">
                                         <i class="nav-icon fas fa-robot indigo"></i>
                                         <p>Machines</p>
                                     </router-link>
@@ -100,25 +99,25 @@
                     @endif
 
                         <li class="nav-item">
-                            <router-link to="/interventions" class="nav-link">
+                            <router-link to="/Preventions" class="nav-link">
                             <i class="nav-icon fas fa-exclamation-triangle yellow"></i>
                                 <p>
-                                Interventions préventives 
+                                Interventions Préventives 
                                 </p>
                             </router-link>
                         </li>
 
                         <li class="nav-item">
-                            <router-link to="/corrections" class="nav-link">
+                            <router-link to="/Corrections" class="nav-link">
                             <i class="nav-icon fas fa-tools orange"></i>
                                 <p>
-                                Interventions correctives
+                                Interventions Correctives
                                 </p>
                             </router-link>
                         </li>
 
                         <li class="nav-item">
-                            <router-link to="/planning" class="nav-link">
+                            <router-link to="/Planning" class="nav-link">
                             <i class="nav-icon fas fa-calendar-alt green"></i><p>Planning</p>
                             </router-link>
                         </li>
@@ -126,7 +125,7 @@
 
                         
                         <li class="nav-item">
-                            <router-link to="/statistiques" class="nav-link">
+                            <router-link to="/Statistiques" class="nav-link">
                                 <i class="nav-icon fas fa-chart-pie purple"></i>
                                 <p>
                                 Statistiques

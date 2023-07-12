@@ -9,11 +9,8 @@ const app = createApp({
   methods: {
     handleSearch: _.debounce(function() {
       emitter.emit('searching', this.search);
-    }, 1000),
-    printme() {
-        window.print();
-    },
-  },
+    }, 500),
+  }
 });
 /* ------------------------------------------ Bootstrap ------------------------------------------*/
 import './bootstrap';
@@ -28,7 +25,7 @@ import VueProgressBar from "@aacassandra/vue3-progressbar";
 const options = {
   color: "#bffaf3",
   failedColor: "#874b4b",
-  thickness: "5px",
+  thickness: "4px",
   transition: {
     speed: "0.2s",
     opacity: "0.6s",
@@ -71,15 +68,15 @@ app.component('Error', Error);
 
 // Define routes
 const routes = [
-  { path: '/Users', component: Users },
-  { path: '/fabricants', component: ExampleComponent },
-  { path: '/machines', component: ExampleComponent },
-  { path: '/interventions', component: ExampleComponent },
-  { path: '/corrections', component: ExampleComponent },
-  { path: '/planning', component: ExampleComponent },
-  { path: '/statistiques', component: ExampleComponent },
+  { path: '/Utilisateurs', component: Users },
+  { path: '/Fournisseurs', component: ExampleComponent },
+  { path: '/Machines', component: ExampleComponent },
+  { path: '/Preventions', component: ExampleComponent },
+  { path: '/Corrections', component: ExampleComponent },
+  { path: '/Planning', component: ExampleComponent },
+  { path: '/Statistiques', component: ExampleComponent },
   { path: '/home', component: ExampleComponent},
-  { path: '/:pathMatch(.*)*', component: Error},
+  { path: '/:pathMatch(.*)*', redirect: '/home' }, // Redirect all other paths to '/home'
 ];
 
 // Create the router instance

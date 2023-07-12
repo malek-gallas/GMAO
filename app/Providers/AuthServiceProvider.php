@@ -15,20 +15,19 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         //
     ];
-
     /**
      * Register any authentication / authorization services.
      */
     public function boot(): void
     {
         Gate::define('isAdmin',function($user){
-            return $user->type === 'admin';
+            return $user->role === 'Administrateur';
         });
-        Gate::define('isChef',function($user){
-            return $user->type === 'chef de service';
+        Gate::define('isManager',function($user){
+            return $user->role === 'Chef de service';
         });
-        Gate::define('isTechnicien',function($user){
-            return $user->type === 'technicien';
+        Gate::define('isWorker',function($user){
+            return $user->role === 'Technicien';
         });
     }
 }

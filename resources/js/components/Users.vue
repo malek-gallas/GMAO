@@ -6,10 +6,10 @@
                 <div class="card">
 
                     <div class="card-header">
-                        <h3 class="card-title">Liste des intervenants</h3>
+                        <h3 class="card-title">Liste des utilisateurs</h3>
                         <div class="card-tools">
-                            <button class="btn btn-success" @click="newModal">Ajouter</button>       
-                            <button class="btn btn-info" @click="exportExcel">Export excel</button>    
+                            <button class="btn btn-success mr-3" @click="newModal">Ajouter</button>       
+                            <button class="btn btn-info" @click="exportExcel">Exporter</button>    
                         </div>
                     </div>
 
@@ -18,24 +18,24 @@
                             <tbody>
                                 <tr>
                                     <th>Matricule</th>
-                                    <th>Nom</th>
                                     <th>Prénom</th>
-                                    <th>Login</th>
-                                    <th>type</th>
+                                    <th>Nom</th>
+                                    <th>Email</th>
+                                    <th>Rôle</th>
                                 </tr>
                                 <tr v-for="user in users.data" :key="user.id">
-                                    <td>{{user.matricule}}</td>
-                                    <td>{{user.name}}</td>
-                                    <td>{{user.surname}}</td>
-                                    <td>{{user.username}}</td>
-                                    <td>{{user.type}}</td>   
+                                    <td>{{user.employee_id}}</td>
+                                    <td>{{user.first_name}}</td>
+                                    <td>{{user.last_name}}</td>
+                                    <td>{{user.email}}</td>
+                                    <td>{{user.role}}</td>   
                                     <td>
                                         <a href="#" @click="editModal(user)">
                                             <i class="fa fa-edit"></i>
                                         </a>
                                         /
                                         <a href="#" @click="deleteUser(user.id)">
-                                            <i class="fa fa-trash"></i>
+                                            <i class="fa fa-trash red"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -69,52 +69,49 @@
                     <form @submit.prevent="editmode ? updateUser() : createUser()">
                         <div class="modal-body">
                             <div class="form-group">
-                                <input v-model="form.matricule" type="text" name="matricule" id="matricule"
+                                <input v-model="form.employee_id" type="text" name="employee_id" id="employee_id"
                                 placeholder="Matricule"
-                                class="form-control" :class="{ 'is-invalid': form.errors.has('matricule') }">
-                                <div v-if="form.errors.has('matricule')" v-html="form.errors.get('matricule')"></div>
+                                class="form-control" :class="{ 'is-invalid': form.errors.has('employee_id') }">
+                                <div v-if="form.errors.has('employee_id')" v-html="form.errors.get('employee_id')"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <input v-model="form.first_name" type="text" name="first_name" id="first_name"
+                                placeholder="Prénom"
+                                class="form-control" :class="{ 'is-invalid': form.errors.has('first_name') }">
+                                <div v-if="form.errors.has('first_name')" v-html="form.errors.get('first_name')"></div>
                             </div>
                             
                             <div class="form-group">
-                                <input v-model="form.name" type="text" name="name" id="name"
-                                placeholder="Nom" autocomplete="name"
-                                class="form-control" :class="{ 'is-invalid': form.errors.has('name') }">
-                                <div v-if="form.errors.has('name')" v-html="form.errors.get('matricule')"></div>
+                                <input v-model="form.last_name" type="text" name="last_name" id="last_name"
+                                placeholder="Nom" autocomplete="last_name"
+                                class="form-control" :class="{ 'is-invalid': form.errors.has('last_name') }">
+                                <div v-if="form.errors.has('last_name')" v-html="form.errors.get('last_name')"></div>
                             </div>
 
                             <div class="form-group">
-                                <input v-model="form.surname" type="text" name="surname" id="surname"
-                                placeholder="Prénom"
-                                class="form-control" :class="{ 'is-invalid': form.errors.has('surname') }">
-                                <div v-if="form.errors.has('surname')" v-html="form.errors.get('matricule')"></div>
-                                </div>
-
+                            <select v-model="form.role" name="role" id="role"
+                                    class="form-control" :class="{ 'is-invalid': form.errors.has('role') }">
+                                <option value="">Choisir la fonction</option>
+                                <option value="Administrateur">Administrateur</option>
+                                <option value="Chef de service">Chef de service</option>
+                                <option value="Technicien">Technicien</option>
+                            </select>
+                            <div v-if="form.errors.has('role')" v-html="form.errors.get('role')"></div>
+                            </div>
 
                             <div class="form-group">
-                                <input v-model="form.username" type="text" name="username" id="username"
-                                placeholder="Login" autocomplete="username"
-                                class="form-control" :class="{ 'is-invalid': form.errors.has('username') }">
-                                <div v-if="form.errors.has('username')" v-html="form.errors.get('matricule')"></div>
+                                <input v-model="form.email" type="email" name="email" id="email"
+                                placeholder="Email" autocomplete="email"
+                                class="form-control" :class="{ 'is-invalid': form.errors.has('email') }">
+                                <div v-if="form.errors.has('email')" v-html="form.errors.get('email')"></div>
                             </div>
 
                             <div class="form-group">
                                 <input v-model="form.password" type="password" name="password" id="password"
                                 placeholder="Mot de passe"
                                 class="form-control" :class="{ 'is-invalid': form.errors.has('password') }">
-                                <div v-if="form.errors.has('passwor')" v-html="form.errors.get('matricule')"></div>
-                            </div>
-
-      
-
-                            <div class="form-group">
-                            <select v-model="form.type" name="type" id="type"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('type') }">
-                                <option value="">Choisir la fonction</option>
-                                <option value="admin">Admin</option>
-                                <option value="technicien">Technicien</option>
-                                <option value="chef de service">Chef de service</option>
-                            </select>
-                            <div v-if="form.errors.has('type')" v-html="form.errors.get('type')"></div>
+                                <div v-if="form.errors.has('password')" v-html="form.errors.get('password')"></div>
                             </div>
 
                         </div>
@@ -122,7 +119,7 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal" :disabled="form.busy">Close</button>
                             <button v-show="editmode" type="submit" class="btn btn-success" :disabled="form.busy">Modifier</button>
-                            <button v-show="!editmode" type="submit" class="btn btn-primary" :disabled="form.busy">Ajouter</button>
+                            <button v-show="!editmode" type="submit" class="btn btn-success" :disabled="form.busy">Ajouter</button>
                         </div>
 
                     </form>
@@ -143,12 +140,12 @@ import Form from 'vform'
                 users :{},
                 form: new Form({
                     id:'',
-                    matricule: '',
-                    name:'',
-                    surname:'',
-                    username:'',
-                    password:'',
-                    type: ''
+                    employee_id: '',
+                    first_name:'',
+                    last_name:'',
+                    role:'',
+                    email:'',
+                    password: ''
                 })
             }
         },
@@ -237,7 +234,7 @@ import Form from 'vform'
                     confirmButtonText: 'Oui, Supprimer!',
                     }).then((result) => {
                          if (result.value) {
-                                this.form.delete('api/user/'+id).then(()=>{
+                                this.form.delete('api/user'+id).then(()=>{
                                         this.$swal.fire(
                                         'Supprimé!',
                                         'Utilisateur supprimé.',
