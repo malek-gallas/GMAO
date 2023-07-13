@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\SupplierController;
+use App\Http\Controllers\API\MachineController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,5 +18,7 @@ use App\Http\Controllers\API\UserController;
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResources([
         'user' => UserController::class,
+        'supplier' => SupplierController::class,
+        'machine' => MachineController::class,
     ]);
 });

@@ -53,6 +53,9 @@ import mitt from 'mitt';
 const emitter = mitt()
 app.config.globalProperties.$emitter = emitter;
 
+/* ------------------------------------ Data Binding (VueX) --------------------------------------*/
+import store from './Store'
+
 /* ----------------------------------------- Vue Router ------------------------------------------- */
 
 // Import vue-router
@@ -63,14 +66,18 @@ import ExampleComponent from './components/ExampleComponent.vue';
 app.component('example-component', ExampleComponent);
 import Users from './components/Users.vue';
 app.component('Users', Users);
+import Suppliers from './components/Suppliers.vue';
+app.component('Suppliers', Suppliers);
+import Machines from './components/Machines.vue';
+app.component('Machines', Machines);
 import Error from './components/Error.vue';
 app.component('Error', Error);
 
 // Define routes
 const routes = [
   { path: '/Utilisateurs', component: Users },
-  { path: '/Fournisseurs', component: ExampleComponent },
-  { path: '/Machines', component: ExampleComponent },
+  { path: '/Fournisseurs', component: Suppliers },
+  { path: '/Machines', component: Machines },
   { path: '/Preventions', component: ExampleComponent },
   { path: '/Corrections', component: ExampleComponent },
   { path: '/Planning', component: ExampleComponent },
@@ -86,6 +93,6 @@ const router = createRouter({
 });
 
 /* -------------------------------------------- Mount ------------------------------------------ */
-app.use(router).use(VueProgressBar, options).use(VueSweetalert2);
+app.use(router).use(VueProgressBar, options).use(VueSweetalert2).use(store);
 app.mount('#app');
 
