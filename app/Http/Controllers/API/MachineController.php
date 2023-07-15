@@ -14,7 +14,7 @@ class MachineController extends Controller
     {
         $this->middleware('auth:sanctum');
         $this->middleware(function ($request, $next) {
-            if (!Gate::allows('isManager')) {
+            if (!Gate::allows('isAdmin') && !Gate::allows('isManager') && !Gate::allows('isWorker')) {
                 abort(403, 'Unauthorized');
             }
             return $next($request);
@@ -59,7 +59,7 @@ class MachineController extends Controller
     public function show(string $query)
     {
         return Machine::where(function ($queryBuilder) use ($query) {
-            $queryBuilder->whereRaw('LOWER(cde) LIKE ?', ['%' . strtolower($query) . '%'])
+            $queryBuilder->whereRaw('LOWER(code) LIKE ?', ['%' . strtolower($query) . '%'])
                             ->orWhereRaw('LOWER(name) LIKE ?', ['%' . strtolower($query) . '%']);
                                         
         })

@@ -16,7 +16,7 @@ class UserController extends Controller
     {
         $this->middleware('auth:sanctum');
         $this->middleware(function ($request, $next) {
-            if (!Gate::allows('isAdmin')) {
+            if (!Gate::allows('isAdmin') && !Gate::allows('isManager') && !Gate::allows('isWorker')) {
                 abort(403, 'Unauthorized');
             }
             return $next($request);

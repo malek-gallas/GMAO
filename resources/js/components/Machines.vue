@@ -104,42 +104,42 @@
                             </div>
 
                             <div class="form-group">
-                                <select v-model="form.section" type="text" name="section" id="section"
-                                    :class="{ 'is-invalid': form.errors.has('section') }">
-                                    <option value="">Choisir la section:</option>
-                                    <option value="Machine">Machine</option>
-                                    <option value="Mécanique">Mécanique</option>
-                                    <option value="Atelier spécial">Atelier spécial</option>
-                                    <option value="Chromage et pulvérisation">Chromage et pulvérisation</option>
-                                </select>
-                                <div v-if="form.errors.has('section')" v-html="form.errors.get('section')"></div>
-                            </div> 
+                            <select v-model="form.section" name="section" id="section"
+                                    class="form-control" :class="{ 'is-invalid': form.errors.has('section') }">
+                                <option value="">Choisir la section:</option>
+                                <option value="Machine">Machine</option>
+                                <option value="Mécanique">Mécanique</option>
+                                <option value="Atelier spécial">Atelier spécial</option>
+                                <option value="Chromage et pulvérisation">Chromage et pulvérisation</option>
+                            </select>
+                            <div v-if="form.errors.has('section')" v-html="form.errors.get('section')"></div>
+                            </div>
 
                             <div class="form-group">
-                                <select v-model="form.unit" type="text" name="unit" id="unit"
-                                     :class="{ 'is-invalid': form.errors.has('unit') }">
-                                    <option value="Choisir l'unité:">Choisir l'unité:</option>
-                                    <option value="Meubles modulaires">Meubles modulaires</option>
-                                    <option value="Les mètiers">Les mètiers</option>
-                                    <option value="Meubles massifs">Meubles massifs</option>
-                                    <option value="Panoverre">Panoverre</option>
-                                    <option value="Métal design">Métal design</option>
-                                    <option value="Poly-meuble">Poly-meuble</option>
-                                    <option value="L'art de salon">L'art de salon</option>
-                                </select>
-                                <div v-if="form.errors.has('unit')" v-html="form.errors.get('unit')"></div>
-                            </div> 
+                            <select v-model="form.unit" name="unit" id="unit"
+                                    class="form-control" :class="{ 'is-invalid': form.errors.has('unit') }">
+                                <option value="">Choisir l'unité:</option>
+                                <option value="Meubles modulaires">Meubles modulaires</option>
+                                <option value="Les mètiers">Les mètiers</option>
+                                <option value="Meubles massifs">Meubles massifs</option>
+                                <option value="Panoverre">Panoverre</option>
+                                <option value="Métal design">Métal design</option>
+                                <option value="Poly-meuble">Poly-meuble</option>
+                                <option value="L'art de salon">L'art de salon</option>
+                            </select>
+                            <div v-if="form.errors.has('unit')" v-html="form.errors.get('unit')"></div>
+                            </div>
 
                             <div class="form-group">
-                                <select v-model="form.supplier" type="text" name="supplier" id="supplier" 
-                                class="form-control" :class="{ 'is-invalid': form.errors.has('supplier') }">
-                                    <option value="">Choisir le fournisseur:</option>
-                                    <option v-for="(supplier, id) in suppliers" v-bind:key="id" 
+                            <select v-model="form.supplier" name="supplier" id="supplier"
+                                    class="form-control" :class="{ 'is-invalid': form.errors.has('supplier') }">
+                                <option value="">Choisir le fournisseur:</option>
+                                <option v-for="(supplier, id) in suppliers" v-bind:key="id" 
                                     v-bind:value="supplier.name">
                                     {{supplier.name}}
                                     </option>
-                                </select>
-                                <div v-if="form.errors.has('supplier')" v-html="form.errors.get('supplier')"></div>
+                            </select>
+                            <div v-if="form.errors.has('supplier')" v-html="form.errors.get('supplier')"></div>
                             </div>
 
                             <div class="form-group">
@@ -148,7 +148,6 @@
                                 class="form-control" :class="{ 'is-invalid': form.errors.has('purchase_date') }">
                                 <div v-if="form.errors.has('purchase_date')" v-html="form.errors.get('purchase_date')"></div>
                             </div>
-
                                                 
                         </div>
 
@@ -181,9 +180,9 @@ import {mapState} from 'vuex'
                     name: '',
                     type:'',
                     serie:'',
-                    section:'',
-                    unit:'',
-                    supplier:'',
+                    section:'non-définie',
+                    unit:'non-définie',
+                    supplier:'non-définie',
                     purchase_date:''  
                 })
             }
@@ -251,7 +250,7 @@ import {mapState} from 'vuex'
                     $('#modal').modal('hide');
                     this.$swal.fire(
                         'Modifié!',
-                        'Informations modifiés!',
+                        'Informations modifiées!',
                         'success'
                         )
                         this.$Progress.finish();
